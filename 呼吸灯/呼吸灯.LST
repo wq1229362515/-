@@ -1,0 +1,121 @@
+C51 COMPILER V9.02   º_ÎüµÆ                                                                05/28/2019 14:57:25 PAGE 1   
+
+
+C51 COMPILER V9.02, COMPILATION OF MODULE º_ÎüµÆ
+OBJECT MODULE PLACED IN ºôÎüµÆ.OBJ
+COMPILER INVOKED BY: E:\kill\C51\BIN\C51.EXE ºôÎüµÆ.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1             #include<reg51.h> 
+   2          void Delay1(int del)
+   3          {
+   4   1              int i,j;
+   5   1              for(i=0; i<del; i++)
+   6   1              for(j=0; j<1827; j++)   
+   7   1              ;
+   8   1      }
+   9          void Delay(unsigned int t)
+  10          {
+  11   1       while(--t);
+  12   1      }
+  13          
+  14          void LedBreath(){
+  15   1              
+  16   1           unsigned int CYCLE=400,PWM_LOW=0;//¶¨ÒåÖÜÆÚ²¢¸³Öµ     
+  17   1              while (1)         //Ö÷Ñ­»·
+  18   1              {
+  19   2      
+  20   2      /*--------ÕûÅÅLEDµÆºôÎü---------*/
+  21   2                     if(IE1==1){
+  22   3                                       return;
+  23   3                                 } 
+  24   2                                 else{
+  25   3                                      Delay1(100);                                                                 //¼ÓÑÓÊ±£¬¿ÉÒÔ¿´µ½Ï¨Ãð
+             -µÄ¹ý³Ì£¨ÏÂÃæ³ÌÐòÍ¬Àí£©
+  26   3                      for(PWM_LOW=1;PWM_LOW<CYCLE;PWM_LOW++)           //PWM_LOW±íÊ¾µÍ
+  27   3                              { 
+  28   4                                      P2=0x00;                                        
+  29   4                                      Delay(PWM_LOW);
+  30   4                                      P2=0xff; 
+  31   4                                      Delay(CYCLE-PWM_LOW);
+  32   4                              }
+  33   3                      P1=0xff;                                                                                
+  34   3                      for(PWM_LOW=CYCLE-1;PWM_LOW>0;PWM_LOW--)         //ÓëÖð½¥±äÁÁÏà·´µÄ¹ý³Ì
+  35   3                              {
+  36   4                                         P2=0x00;                                                        //µãÁÁL
+             -ED 
+  37   4                                         Delay(PWM_LOW);
+  38   4                                         P2=0xff;                                                        //Ï¨ÃðL
+             -ED
+  39   4                                        Delay(CYCLE-PWM_LOW);                                //Ö÷Ñ­»·ÖÐÌí¼ÓÆäËûÐ
+             -èÒªÒ»Ö±¹¤×÷µÄ³ÌÐò£¬ÑÓÊ±³¤¶È£¬600´ÎÑ­»·ÖÐ´Ó599¼õÖÁ1
+  40   4                              }
+  41   3                                 
+  42   3                                }
+  43   2                      
+  44   2      
+  45   2                      }
+  46   1      
+  47   1      }
+  48          
+  49          void LedShaing(){
+  50   1              while(1) {
+  51   2                      if(IE0 == 1) {
+C51 COMPILER V9.02   º_ÎüµÆ                                                                05/28/2019 14:57:25 PAGE 2   
+
+  52   3                              return; 
+  53   3                      }
+  54   2                      P2 = 0xff;
+  55   2               }
+  56   1      //P2 = 0xff;
+  57   1      
+  58   1              
+  59   1      }
+  60          void Init_Interrupt() {
+  61   1              EA = 1;
+  62   1      
+  63   1              EX0 = 1;
+  64   1      //      EX0=0;          //Íâ²¿ÖÐ¶Ï0Ê¹ÄÜ
+  65   1              IE0 = 0;
+  66   1      
+  67   1              EX1 = 1;                //Íâ²¿ÖÐ¶Ï1Ê¹ÄÜ
+  68   1              IE1 = 0;
+  69   1      
+  70   1      }
+  71          
+  72          //ÖÐ¶Ï³ÌÐò
+  73          void interrupt_LedBreath() interrupt 0 {
+  74   1                IE0 = 0;
+  75   1                LedBreath();
+  76   1      }  
+  77          
+  78          void interrupt_LedShaing() interrupt 2 {
+  79   1                IE1 = 0;
+  80   1                LedShaing();
+  81   1      }  
+  82          
+  83           //º¯ÊýÉùÃ÷
+  84          unsigned int z,y;
+  85          void main (void)//Ö÷º¯Êý
+  86          
+  87          {
+  88   1              P2 = 0x00;
+  89   1              //³õÊ¼»¯ÖÐ¶Ï,Íâ²¿ÖÐ¶Ï0
+  90   1              Init_Interrupt();
+  91   1              while(1);
+  92   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    242    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      4    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
